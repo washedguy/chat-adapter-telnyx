@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+# id-token enables npm trusted publishing (OIDC) — no NPM_TOKEN needed.
+# Enable "Allow GitHub Actions to create and approve pull requests" in repo settings.
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: release-main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run build
+      - uses: changesets/action@v2
+        with:
+          publish-script: npx changeset publish

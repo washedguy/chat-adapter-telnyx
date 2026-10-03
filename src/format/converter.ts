@@ -1,0 +1,51 @@
+import {
+  type AdapterPostableMessage,
+  BaseFormatConverter,
+  type Content,
+  isTableNode,
+  parseMarkdown,
+  type Root,
+  stringifyMarkdown,
+  tableToAscii,
+  walkAst,
+} from "chat";
+
+/**
+ * SMS/MMS carry plain text, so the converter parses inbound text as Markdown
+ * (for handler convenience) and flattens rich Markdown that does not render on
+ * a phone — notably tables, which become ASCII tables inside a code block.
+ */
+export class TelnyxFormatConverter extends BaseFormatConverter {
+  toAst(text: string): Root {
+    return parseMarkdown(text);
+  }
+
+  fromAst(ast: Root): string {
+    const transformed = walkAst(structuredClone(ast), (node: Content) => {
+      if (isTableNode(node)) {
+        return {
+          type: "code" as const,
+          value: tableToAscii(node),
+        };
+      }
+      return node;
+    });
+    return stringifyMarkdown(transformed).trim();
+  }
+
+  renderPostable(message: AdapterPostableMessage): string {
+    if (typeof message === "string") {
+      return message;
+    }
+    if ("raw" in message) {
+      return message.raw;
+    }
+    if ("markdown" in message) {
+      return this.fromMarkdown(message.markdown);
+    }
+    if ("ast" in message) {
+      return this.fromAst(message.ast);
+    }
+    return super.renderPostable(message);
+  }
+}
