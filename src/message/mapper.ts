@@ -35,10 +35,10 @@ export interface ThreadFromResourceOptions {
  * Derive the conversation thread from a message resource.
  *
  * - Outbound: the bot is `from`; recipients are `to`.
- * - Inbound 1:1: the bot is `to`; the recipient is `from`.
+ * - Inbound 1:1: the bot is the single `to` entry (authoritative), the
+ *   recipient is `from`.
  * - Inbound group MMS: the bot is `configuredSender` (or the first `to`), and
- *   the recipients are everyone else in the conversation so a reply reaches
- *   the whole group.
+ *   the recipients are everyone else so a reply reaches the whole group.
  */
 export function threadFromResource(
   resource: TelnyxMessageResource,
@@ -53,13 +53,27 @@ export function threadFromResource(
     return requireRouting({ recipients, sender });
   }
 
-  const sender = options.fallback?.sender ?? options.configuredSender ?? to[0];
+  // Group MMS lists every recipient in `to`, including our own number, which
+  // must be excluded. That needs `configuredSender`, or `to[0]` as a fallback.
+  if (to.length > 1) {
+    const sender =
+      options.fallback?.sender ?? options.configuredSender ?? to[0];
+    if (!sender) {
+      throw missingRouting();
+    }
+    const recipients = dedupe([from, ...to]).filter(
+      (address) => address !== sender,
+    );
+    return requireRouting({ recipients, sender });
+  }
+
+  // 1:1: the receiving number in `to` is authoritative, even when a different
+  // `configuredSender` is set (an account can own several Telnyx numbers).
+  const sender = options.fallback?.sender ?? to[0] ?? options.configuredSender;
   if (!sender) {
     throw missingRouting();
   }
-  const recipients = dedupe([from, ...to]).filter(
-    (address) => address !== sender,
-  );
+  const recipients = from && from !== sender ? [from] : [];
   return requireRouting({ recipients, sender });
 }
 
