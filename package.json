@@ -1,6 +1,6 @@
 {
   "name": "chat-adapter-telnyx",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Community Telnyx adapter for Chat SDK — SMS and MMS bots with the Messaging API and Ed25519-signed webhooks",
   "type": "module",
   "sideEffects": false,
