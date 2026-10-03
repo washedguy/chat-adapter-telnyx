@@ -14,21 +14,21 @@ import type {
 export const DEFAULT_API_BASE_URL = "https://api.telnyx.com/v2";
 
 /**
- * Resolve a credential from an explicit config value or an environment
- * variable. Config values may be strings or lazily-invoked functions.
+ * Resolve a credential from an explicit config value. The value may be a
+ * string or a lazily-invoked function; env fallbacks are applied at the call
+ * site with explicit, static `process.env.X` reads.
  */
 export async function resolveTelnyxCredential(
   value: TelnyxCredential | undefined,
-  environmentName: string,
+  label: string,
 ): Promise<string> {
-  const source = value ?? process.env[environmentName];
-  if (!source) {
-    throw new TelnyxApiError(`${environmentName} is required`, {
+  if (!value) {
+    throw new TelnyxApiError(`${label} is required`, {
       body: null,
       status: 0,
     });
   }
-  return typeof source === "function" ? await source() : source;
+  return typeof value === "function" ? await value() : value;
 }
 
 export async function callTelnyxApi(
@@ -41,7 +41,7 @@ export async function callTelnyxApi(
       : pathOrOptions;
 
   const apiKey = await resolveTelnyxCredential(
-    requestOptions.apiKey,
+    requestOptions.apiKey ?? process.env.TELNYX_API_KEY,
     "TELNYX_API_KEY",
   );
   const url = buildUrl(requestOptions);

@@ -45,7 +45,7 @@ export async function verifyTelnyxRequest(
   assertTimestampFresh(timestamp, options.timestampToleranceSeconds ?? 300);
 
   const publicKey = await resolveTelnyxCredential(
-    options.publicKey,
+    options.publicKey ?? process.env.TELNYX_PUBLIC_KEY,
     "TELNYX_PUBLIC_KEY",
   );
   const valid = await verifyEd25519Signature({
