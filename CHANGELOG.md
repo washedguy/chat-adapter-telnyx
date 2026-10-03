@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2
+
+### Patch Changes
+
+- a6a09e7: Use static environment lookups and ship unminified, unbundled output for clearer supply-chain signals.
+
 ## 0.1.1
 
 ### Patch Changes
