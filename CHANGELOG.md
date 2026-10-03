@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+### Patch Changes
+
+- d999700: Resolve 1:1 threads from the receiving number so accounts with several Telnyx numbers route replies to the right sender.
+
 ## 0.1.2
 
 ### Patch Changes
