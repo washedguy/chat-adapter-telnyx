@@ -103,6 +103,10 @@ npm run build     # tsup
 Releases run through Changesets + npm trusted publishing on `main` (see
 `.github/workflows/release.yml`).
 
+## Author
+
+Built and maintained by Jan Herklotz, [washed.dev](https://washed.dev): websites and web apps from Wiesbaden.
+
 ## License
 
 MIT
