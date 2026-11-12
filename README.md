@@ -3,9 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/chat-adapter-telnyx)](https://www.npmjs.com/package/chat-adapter-telnyx)
 [![license](https://img.shields.io/npm/l/chat-adapter-telnyx)](./LICENSE)
 
-Community [Telnyx](https://telnyx.com) adapter for [Chat SDK](https://chat-sdk.dev) — SMS and MMS bots with Ed25519-signed webhooks.
-
-> Community adapter, not maintained by Vercel. The `@chat-adapter/*` scope is reserved for official adapters.
+[Chat SDK](https://chat-sdk.dev) adapter for [Telnyx](https://telnyx.com) SMS and MMS.
 
 ## Install
 
@@ -75,7 +73,6 @@ The factory falls back to the env var when an option is omitted.
 - Inbound and outbound SMS/MMS, verified via Ed25519 webhooks
 - Group MMS, scheduled sends, and media by public URL
 - Delivery receipts, retrieve-by-id, and the standard Chat SDK error taxonomy
-- No reactions, edits, typing indicators, or message listing (not supported by SMS/MMS or Telnyx)
 
 ## Usage notes
 
@@ -102,10 +99,6 @@ npm run build     # tsup
 
 Releases run through Changesets + npm trusted publishing on `main` (see
 `.github/workflows/release.yml`).
-
-## Author
-
-Built and maintained by Jan Herklotz, [washed.dev](https://washed.dev): websites and web apps from Wiesbaden.
 
 ## License
 
