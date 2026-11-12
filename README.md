@@ -102,4 +102,4 @@ Releases run through Changesets + npm trusted publishing on `main` (see
 
 ## License
 
-MIT
+[MIT](LICENSE)
